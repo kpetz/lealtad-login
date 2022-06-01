@@ -1,0 +1,32 @@
+.backgroundImage {
+	background-image: url(../../assets/images/bg/bg-login.webp);
+	background-size: cover;
+	background-position: left center;
+	background-repeat: no-repeat;
+	height: 100vh;
+
+	.verticalAlign {
+		position: absolute;
+		top: 50%;
+		left: 50%;
+		transform: translate(-50%, -50%);
+	}
+
+	.backgroundForm {
+		background-color: rgba(255, 255, 255, 0.75);
+		backdrop-filter: blur(30px);
+	}
+
+	.iconBackground {
+		border: 2px solid #95c11f;
+		background-color: #044f17;
+		border-radius: 50%;
+		margin: auto;
+		width: 90px;
+		height: 90px;
+
+		svg {
+			margin-top: 10px;
+		}
+	}
+}
