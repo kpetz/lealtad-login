@@ -2,28 +2,47 @@ import React, { useContext, useEffect, useState } from 'react'
 import verifyLogin from '../../api/login';
 import NotificationModal from '../NotificationModal';
 import { HiOutlineLockClosed, HiOutlineUserCircle, HiOutlineCheckCircle, HiOutlineBan } from 'react-icons/hi';
-import { Button, Card, Col, Container, Form, Row, Spinner, Modal } from 'react-bootstrap';
+import { Button, Card, Col, Container, Form, Row, Spinner } from 'react-bootstrap';
 import './login.scss';
 import { InputField } from '../form/InputField';
 import { useAuth } from '../../contexts/authContext';
+import { types } from '../../helpers/types';
+import { useNavigate } from 'react-router-dom';
 
 
 const Login = () => {
 	const [formSubmitted, setFormSubmitted] = useState(false);
 	const [thereAreErrors, setThereAreErrors] = useState(false);
 	const [formFields, setFormField] = useState({});
-	const { login, isAuthenticated, isDenied, setIsDenied } = useAuth();
+	const [isDenied, setIsDenied] = useState(false);
+	const navigate = useNavigate();
+	const { dispatch } = useAuth();
 
-	function handleChange(key, value) {
+	const handleChange = (key, value) => {
 		setFormField(prevInfo => ({ ...prevInfo, [key]: value }))
 	};
-	const validateLogin = async () => {
-		const response = await verifyLogin({
-			username: 'karn.yong@mecallapi.com',
-			password: 'mecallapi'
-		});
-		console.log(response);
+
+	const handleLogin = async (credentials) => {
+		const result = await verifyLogin(credentials);
+		if (result.status === 'ok') {
+			console.log(result)
+			const action = {
+				type: types.login,
+				payload: {
+					...result.user,
+					token: result.accessToken
+				}
+			}
+			dispatch(action);
+			const lastPath = localStorage.getItem('lastPath') || '/dashboard';
+			navigate( lastPath, {
+				replace: true
+			});
+		} else {
+			setIsDenied(true);
+		}
 	}
+
 	function validarFomulario(e) {
 
 		e.preventDefault();
@@ -37,14 +56,15 @@ const Login = () => {
 			setThereAreErrors(true);
 			return;
 		} else {
-			login(formFields);
+			setThereAreErrors(false);
+			handleLogin(formFields);
 		}
-		setThereAreErrors(false);
 	}
 	const handleClose = () => {
 		setIsDenied(false);
 		setFormSubmitted(false);
 	};
+
 	return (
 		<>
 			{/* <NotificationModal
@@ -83,13 +103,10 @@ const Login = () => {
 												}} animation="border" variant="light" />
 													: <HiOutlineLockClosed size='60' />
 											}
-											{
-												isAuthenticated && <HiOutlineCheckCircle size='60' />
-											}
 										</div>
 										<Card.Title className='font-weight-bold'>
 											{
-												formSubmitted && !thereAreErrors && !isAuthenticated && !isDenied ?
+												formSubmitted && !thereAreErrors && !isDenied ?
 													'Iniciando sesión...'
 													: !isDenied && 'Inicio de Sesión'
 											}

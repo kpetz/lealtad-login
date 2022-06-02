@@ -1,42 +1,25 @@
-import { createContext, useContext, useState } from 'react';
-import verifyLogin from '../api/login';
+import { createContext, useContext, useEffect, useReducer } from 'react';
+import { authReducer } from './authReducer';
 
 
 const AuthContext = createContext();
 
-const initialUser = {
-	username: 'kevin',
-	password: '123456'
+const initialState = () => {
+	return JSON.parse(localStorage.getItem('user')) || { isAuthenticated: false };
+
 }
 
 export const AuthProvider = ({ children }) => {
-	const [isAuthenticated, setIsAuthenticated] = useState(false);
-	const [user, setUser] = useState({});
-	const [isDenied, setIsDenied] = useState(false);
-	const login = async (credentials) => {
-		const result = await verifyLogin(credentials);
-		if (result.status === 'ok') {
-			setIsAuthenticated(true);
-			setUser({
-				tokenUser: result.accessToken,
-				...result.user
-			});
-			localStorage.setItem('accessToken', result['accessToken']);
-			localStorage.setItem('user', result['user']);
+	const [user, dispatch] = useReducer(authReducer, {}, initialState);
 
-		} else {
-			setIsDenied(true);
-		}
-	}
+	useEffect(() => {
+		if (!user) return;
 
-	const logout = () => {
-		setIsAuthenticated(false);
-		setUser({});
-		localStorage.removeItem("accessToken");
-		localStorage.removeItem("user");
-	}
+		localStorage.setItem('user', JSON.stringify(user));
+	}, [user])
+
 	return (
-		<AuthContext.Provider value={{ isAuthenticated, setIsAuthenticated, user, login, logout, isDenied, setIsDenied }}>
+		<AuthContext.Provider value={{ user, dispatch }}>
 			{children}
 		</AuthContext.Provider>
 	);

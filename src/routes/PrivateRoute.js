@@ -5,16 +5,13 @@ import Login from '../components/login/Login';
 
 const PrivateRoute = ({ children }) => {
 
-	const { isAuthenticated, setIsAuthenticated } = useAuth();
+	const { user } = useAuth();
 	const { pathname, search } = useLocation();
-	console.log('logeado? ' + isAuthenticated);
-	localStorage.setItem('lastPath', pathname + search);
-	const token = localStorage.getItem('accessToken');
-	console.log(token)
-	if (token) {
-		setIsAuthenticated(true);
-	}
-	return isAuthenticated ? children : <Navigate to="/login" />;
+
+	if (user.isAuthenticated)
+		localStorage.setItem('lastPath', (pathname !== '/' ? (pathname + search) : '/dashboard'));
+
+	return user.isAuthenticated ? children : <Navigate to="/login" />;
 }
 
 export default PrivateRoute

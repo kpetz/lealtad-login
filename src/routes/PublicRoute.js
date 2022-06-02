@@ -1,11 +1,10 @@
 import { useAuth } from '../contexts/authContext';
 import { Navigate } from 'react-router-dom';
-import { useContext } from 'react';
 
 const PublicRoute = ({ children }) => {
-	const { isAuthenticated } = useAuth();
+	const { user } = useAuth();
 
-	return isAuthenticated ? <Navigate to="/dashboard" /> : children;
+	return user.isAuthenticated ? <Navigate to="/dashboard" /> : children;
 }
 
 export default PublicRoute;
