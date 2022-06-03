@@ -8,6 +8,7 @@ import { InputField } from '../form/InputField';
 import { useAuth } from '../../contexts/authContext';
 import { types } from '../../helpers/types';
 import { useNavigate } from 'react-router-dom';
+import { CheckBoxField } from '../form/CheckBoxField';
 
 
 const Login = () => {
@@ -25,7 +26,6 @@ const Login = () => {
 	const handleLogin = async (credentials) => {
 		const result = await verifyLogin(credentials);
 		if (result.status === 'ok') {
-			console.log(result)
 			const action = {
 				type: types.login,
 				payload: {
@@ -35,7 +35,7 @@ const Login = () => {
 			}
 			dispatch(action);
 			const lastPath = localStorage.getItem('lastPath') || '/dashboard';
-			navigate( lastPath, {
+			navigate(lastPath, {
 				replace: true
 			});
 		} else {
@@ -64,21 +64,13 @@ const Login = () => {
 		setIsDenied(false);
 		setFormSubmitted(false);
 	};
-
 	return (
 		<>
-			{/* <NotificationModal
-				IconModal={HiOutlineCheckCircle}
-				iconColorModal='#044f17'
-				messageModal='Inicio de sesión exitoso'
-				showModal={showModal}
-				onHide={handleClose}
-			/> */}
 			<NotificationModal
 				IconModal={HiOutlineBan}
 				iconColorModal='#fb5000'
-				title='Fallo el inicio de sesión.'
-				messageModal='Por favor debe verificar su usuario y/o contraseña.'
+				title='Falló el inicio de sesión.'
+				messageModal='El usuario y/o contraseña no coinciden. Por favor, verifique.'
 				showModal={isDenied}
 				onHide={handleClose}
 			/>
@@ -88,7 +80,7 @@ const Login = () => {
 				>
 					<Row className='align-items-center'>
 						<Col lg={8}>
-
+						
 						</Col>
 						<Col lg={4}>
 							<Card className='backgroundForm'>
@@ -114,12 +106,10 @@ const Login = () => {
 										{
 											formSubmitted && thereAreErrors &&
 											<div className='form-validation-message'>
-												Los campos son obligatorios.
+												Verifique que los campos esten correctamente llenados.
 											</div>
-
 										}
 									</div>
-
 									<Form noValidate onSubmit={validarFomulario} >
 										<Row>
 											<InputField
@@ -132,8 +122,6 @@ const Login = () => {
 												md={12}
 												onFieldChange={handleChange}
 											/>
-										</Row>
-										<Row>
 											<InputField
 												controlId='password'
 												label='mecallapi'
@@ -144,10 +132,17 @@ const Login = () => {
 												md={12}
 												onFieldChange={handleChange}
 											/>
+											<CheckBoxField
+												controlId='rememberMe'
+												label='Recuerdame'
+												formSubmitted={formSubmitted}
+												md={12}
+												onFieldChange={handleChange}
+											/>
 										</Row>
-										<Form.Group className='pt-2 mb-3 ' controlId='formBasicCheckbox'>
+										{/* <Form.Group className='pt-2 mb-3 ' controlId='formBasicCheckbox'>
 											<Form.Check className='text-primary' type='checkbox' label='Recuerdame' />
-										</Form.Group>
+										</Form.Group> */}
 										<div className='d-grid'>
 											<Button variant='secondary' type='submit'>
 												Ingresar

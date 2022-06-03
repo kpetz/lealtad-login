@@ -7,3 +7,10 @@
 	text-align: left !important; 
 }
 
+.border-bottom-green{
+	border-bottom: 1px solid $secondary;
+}
+.btn-transparent{
+	background-color: transparent;
+	border-color: transparent;	
+}

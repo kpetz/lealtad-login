@@ -12,8 +12,8 @@ export function InputField({
 	required = false,
 	md = 12,
 	size = 'md',
-	onFieldChange }) {
-
+	onFieldChange
+}) {
 	const [formValue, setFormValue] = useState('');
 	const [showEye, setShowEye] = useState({
 		showIcon: false,
@@ -34,8 +34,8 @@ export function InputField({
 			</Form.Label>
 			{
 				type === 'password' ?
-					<InputGroup className='mb-3'>
-						<Form.Control className={(formSubmitted && !formValue ? 'is-invalid' : '')} size={size} type={showEye.showPass} placeholder={placeholder} onChange={(e) => {
+					<InputGroup>
+						<Form.Control className={(required && formSubmitted && !formValue ? 'is-invalid' : '')} size={size} type={showEye.showPass} placeholder={placeholder} onChange={(e) => {
 							setFormValue(e.target.value);
 							if (onFieldChange) {
 								onFieldChange(controlId, e.target.value);
@@ -50,7 +50,7 @@ export function InputField({
 							}
 						</Button>
 					</InputGroup>
-					: <Form.Control className={(formSubmitted && !formValue ? 'is-invalid' : '')} size={size} type={type} placeholder={placeholder} onChange={(e) => {
+					: <Form.Control className={(required && formSubmitted && !formValue ? 'is-invalid' : '')} size={size} type={type} placeholder={placeholder} onChange={(e) => {
 						setFormValue(e.target.value);
 						if (onFieldChange) {
 							onFieldChange(controlId, e.target.value);
@@ -60,7 +60,12 @@ export function InputField({
 			{
 				formSubmitted
 				&& !formValue
-				&& <div className="invalid-feedback">
+				&& <div
+					className='invalid-feedback'
+					style={{
+						display: 'block'
+					}}
+				>
 					Este campo es obligatorio.
 				</div>
 			}

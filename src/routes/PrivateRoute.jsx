@@ -8,10 +8,11 @@ const PrivateRoute = ({ children }) => {
 	const { user } = useAuth();
 	const { pathname, search } = useLocation();
 
-	if (user.isAuthenticated)
+	if (user.isAuthenticated) {
 		localStorage.setItem('lastPath', (pathname !== '/' ? (pathname + search) : '/dashboard'));
+	}
 
-	return user.isAuthenticated ? children : <Navigate to="/login" />;
+	return user.isAuthenticated ? (pathname === '/' ? <Navigate to="/dashboard" /> : children) : <Navigate to="/login" />;
 }
 
-export default PrivateRoute
+export default PrivateRoute;
