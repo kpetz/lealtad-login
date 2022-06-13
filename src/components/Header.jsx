@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, Navigate } from 'react-router-dom';
 
 import Logo from './Logo';
 // import { ReactComponent as LogoWhite } from '../assets/images/logos/materialprowhite.svg';
@@ -8,8 +8,9 @@ import { Button, Collapse, Container, Dropdown, Nav, Navbar, NavbarBrand, NavDro
 import DropdownMenu from 'react-bootstrap/esm/DropdownMenu';
 import DropdownItem from 'react-bootstrap/esm/DropdownItem';
 import DropdownToggle from 'react-bootstrap/esm/DropdownToggle';
-import { HiX, HiOutlineX, HiOutlineMenu, HiOutlineDotsVertical, HiOutlineChevronDoubleDown, HiOutlineChevronDoubleUp,HiOutlineChevronRight } from 'react-icons/hi';
+import { HiX, HiOutlineX, HiOutlineMenu, HiOutlineDotsVertical, HiOutlineChevronDoubleDown, HiOutlineChevronDoubleUp, HiOutlineChevronRight } from 'react-icons/hi';
 import { useAuth } from '../contexts/authContext';
+import Perfil from './Perfil';
 
 const Header = () => {
 	const [isOpen, setIsOpen] = useState(false);
@@ -23,11 +24,18 @@ const Header = () => {
 	const showMobilemenu = () => {
 		document.getElementById('sidebarArea').classList.toggle('showSidebar');
 	};
+	const logout = () => {
+		const getRemember = localStorage.getItem('rememberMe');
+		if (!getRemember) {
+			localStorage.removeItem('user');
+		}
+		<Navigate to="/login" />;
+	}
 	return (
 		<Navbar collapseOnSelect expand='lg' bg='primary' variant='dark' className='p-lg-0 shadow border-bottom-green'>
 			<Container>
 				<div className='d-flex align-items-center'>
-					<Navbar.Brand href='/'>
+					<Navbar.Brand>
 						<div className='d-md-block d-none me-5 pe-3'>
 							<Logo variant='dark' />
 						</div>
@@ -43,7 +51,15 @@ const Header = () => {
 						<HiOutlineChevronRight />
 					</Button>
 				</div>
-				<Navbar.Toggle aria-controls='responsive-navbar-nav' />
+				<Perfil user={user} />
+				{/* <NavDropdown title="Dropdown" id="nav-dropdown">
+					<NavDropdown.Item eventKey="4.1">Action</NavDropdown.Item>
+					<NavDropdown.Item eventKey="4.2">Another action</NavDropdown.Item>
+					<NavDropdown.Item eventKey="4.3">Something else here</NavDropdown.Item>
+					<NavDropdown.Divider />
+					<NavDropdown.Item eventKey="4.4">Separated link</NavDropdown.Item>
+				</NavDropdown> */}
+				{/* <Navbar.Toggle aria-controls='responsive-navbar-nav' />
 				<Navbar.Collapse className="justify-content-end" id='responsive-navbar-nav'>
 					<Nav>
 						<Nav.Link href='#deets'>More deets</Nav.Link>
@@ -51,7 +67,7 @@ const Header = () => {
 							Dank memes
 						</Nav.Link>
 					</Nav>
-				</Navbar.Collapse>
+				</Navbar.Collapse> */}
 			</Container>
 		</Navbar>
 		// <Navbar bg='primary' variant='dark' expand='md' className='shadow-lg p-0'>
